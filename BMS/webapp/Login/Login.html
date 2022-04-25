@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link href="Login.css" rel="stylesheet">
+    <script src="../js/axios.js"></script>
+</head>
+<body>
+<div id="loginDiv" style="height: 350px">
+    <form action="" id="form">
+        <h1 id="loginMsg">LOGIN IN</h1>
+        <p>Username:<input id="username" name="username" type="text"></p>
+        <p>Password:<input id="password" name="password" type="password"></p>
+        <span id="password_err" class="err_msg" style="display:none">账号密码错误</span>
+        <p>Auto:<input id="auto" name="auto" type="checkbox" value="0"></p>
+        <div id="subDiv">
+            <input type="button" class="button" value="login up" id="btn">
+            <input type="reset" class="button" value="reset">&nbsp;&nbsp;&nbsp;
+            <a href="../Register/Register.html">没有账号？</a>
+        </div>
+    </form>
+</div>
+<script>
+    let auto = document.getElementById("auto");
+    auto.onclick = function (){
+        // alert("点击了");
+        if (auto.checked){
+            // alert("1");
+            auto.value="1";
+        }else{
+            // alert("0");
+            auto.value="0";
+        }
+    }
+</script>
+<script>
+    window.onload = function (){
+        // alert("我加载完了");
+        axios({
+            method:"post",
+            url:"http://localhost:8080/autoServlet"
+        }).then(function (resp){
+            // alert("爷发了");
+            if(resp.data == "0"){
+                // alert("0");
+            }else if(resp.data=="1"){
+                // alert("1");
+                location.href = "http://localhost:8080/User/User.html";
+            }else if(resp.data=="2"){
+                // alert("2");
+                location.href = "http://localhost:8080/Manager/Manager.html";
+            }
+        })
+    }
+</script>
+
+<script>
+    document.getElementById("btn").onclick = function () {
+        alert("点了，别急，让我加载一下");
+        var data = {
+            Username: "",
+            Password: "",
+            Auto: "",
+        };
+        let Username = document.getElementById("username").value;
+        data.Username = Username;
+        let Password = document.getElementById("password").value;
+        data.Password = Password;
+        let Auto = document.getElementById("auto").value;
+        data.Auto = Auto;
+        axios({
+            method:"post",
+            url:"http://localhost:8080/loginServlet",
+            data:data
+        }).then(function (resp){
+            alert("接收到了");
+            if(resp.data == "0"){
+                // alert("0");
+                document.getElementById("password_err").style.display='inline';
+            }else if(resp.data=="1"){
+                // alert("1");
+                location.href = "http://localhost:8080/User/User.html";
+            }else if(resp.data=="2"){
+                // alert("2");
+                location.href = "http://localhost:8080/Manager/Manager.html";
+            }
+        })
+    }
+</script>
+</body>
+</html>

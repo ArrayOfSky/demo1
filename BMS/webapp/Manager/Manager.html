@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/axios.js"></script>
+</head>
+<body>
+<span>借阅列表</span>
+<table id="lending"></table>
+请输入强制归还的用户名<input type="text" id="backu"><br>
+请输入强制归还的书名<input type="text" id="backn"><br>
+<input type="button" value="强制归还" onclick="back()">
+<br>
+<span>图书列表</span>
+<table id="books"></table>
+请输入要删除的书籍名<input type="text" id="delt">
+<br>
+<input type="button" value="删除" onclick="del()">
+<br>
+请输入要添加的书籍的书籍名<input type="text" id="addt"><br>
+请输入要添加的书籍的数目<input type="text" id="addn"><br>
+<input type="button" value="添加" onclick="add()">
+</body>
+<script>
+    function add(){
+        alert("我准备添加书籍");
+        var data ={
+            name:"",
+            number:"",
+        };
+        data.name=document.getElementById("addt").value;
+        data.number=document.getElementById("addn").value;
+        axios({
+            method:"post",
+            url:"http://localhost:8080/addServlet",
+            data:data
+        }).then(function(resp){
+            let data = resp.data;
+            let lendinfos = data[0];
+            let lenddata = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>用户</th>\n" +
+                "    </tr>";
+
+            for (let i = 0; i < lendinfos.length; i++) {
+                let lendinfo1 = lendinfos[i];
+
+                lenddata += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + lendinfo1.book + "</td>\n" +
+                    "        <td>" + lendinfo1.userID + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+
+            // 设置表格数据
+            document.getElementById("lending").innerHTML = lenddata;
+            let books = data[1];
+            let bookData = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>剩余数量</th>\n" +
+                "        <th>借出数量</th>\n" +
+                "    </tr>";
+            for (let i = 0; i < books.length; i++) {
+                var book1 = books[i];
+                bookData += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + book1.name + "</td>\n" +
+                    "        <td>" + book1.number + "</td>\n" +
+                    "        <td>" + book1.borrowNumber + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+            // 设置表格数据
+            document.getElementById("books").innerHTML = bookData;
+
+        })
+    }
+    function del(){
+        alert("我准备删除书籍");
+        var data ={
+            name:"",
+        };
+        data.name=document.getElementById("delt").value;
+        axios({
+            method:"post",
+            url:"http://localhost:8080/delServlet",
+            data:data
+        }).then(function(resp){
+            let data = resp.data;
+            let i = data[0];
+            if(i==1){
+                alert("成功");
+            }else{
+                alert("失败");
+            }
+            let lendinfos = data[1];
+            let lenddata = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>用户</th>\n" +
+                "    </tr>";
+
+            for (let i = 0; i < lendinfos.length; i++) {
+                let lendinfo1 = lendinfos[i];
+
+                lenddata += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + lendinfo1.book + "</td>\n" +
+                    "        <td>" + lendinfo1.userID + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+
+            // 设置表格数据
+            document.getElementById("lending").innerHTML = lenddata;
+            let books = data[2];
+            let bookData = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>剩余数量</th>\n" +
+                "        <th>借出数量</th>\n" +
+                "    </tr>";
+            for (let i = 0; i < books.length; i++) {
+                var book1 = books[i];
+                bookData += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + book1.name + "</td>\n" +
+                    "        <td>" + book1.number + "</td>\n" +
+                    "        <td>" + book1.borrowNumber + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+            // 设置表格数据
+            document.getElementById("books").innerHTML = bookData;
+        })
+    }
+    function back(){
+        alert("我准备删除书籍");
+        var data ={
+            name:"",
+            userID:"",
+        };
+        data.name=document.getElementById("backn").value;
+        data.userID=document.getElementById("backu").value;
+        axios({
+            method:"post",
+            url:"http://localhost:8080/doBackServlet",
+            data:data
+        }).then(function(resp){
+            let data = resp.data;
+            let i = data[0];
+            if(i==1){
+                alert("成功");
+            }else{
+                alert("失败");
+            }
+            let lendinfos = data[1];
+            let lenddata = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>用户</th>\n" +
+                "    </tr>";
+
+            for (let i = 0; i < lendinfos.length; i++) {
+                let lendinfo1 = lendinfos[i];
+
+                lenddata += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + lendinfo1.book + "</td>\n" +
+                    "        <td>" + lendinfo1.userID + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+
+            // 设置表格数据
+            document.getElementById("lending").innerHTML = lenddata;
+            let books = data[2];
+            let bookData = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>剩余数量</th>\n" +
+                "        <th>借出数量</th>\n" +
+                "    </tr>";
+            for (let i = 0; i < books.length; i++) {
+                var book1 = books[i];
+                bookData += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + book1.name + "</td>\n" +
+                    "        <td>" + book1.number + "</td>\n" +
+                    "        <td>" + book1.borrowNumber + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+            // 设置表格数据
+            document.getElementById("books").innerHTML = bookData;
+
+        })
+    }
+</script>
+<script>
+    window.onload = function () {
+        //2. 发送ajax请求
+        axios({
+            method:"post",
+            url:"http://localhost:8080/managerServlet"
+        }).then(function (resp) {
+            let data = resp.data;
+            let lendinfos = data[0];
+            let lenddata = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>用户</th>\n" +
+                "    </tr>";
+
+            for (let i = 0; i < lendinfos.length; i++) {
+                let lendinfo1 = lendinfos[i];
+
+                lenddata += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + lendinfo1.book + "</td>\n" +
+                    "        <td>" + lendinfo1.userID + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+
+            // 设置表格数据
+            document.getElementById("lending").innerHTML = lenddata;
+            let books = data[1];
+            let bookData = " <tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>书名</th>\n" +
+                "        <th>剩余数量</th>\n" +
+                "        <th>借出数量</th>\n" +
+                "    </tr>";
+            for (let i = 0; i < books.length; i++) {
+                var book1 = books[i];
+                bookData += "\n" +
+                    "    <tr align=\"center\">\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + book1.name + "</td>\n" +
+                    "        <td>" + book1.number + "</td>\n" +
+                    "        <td>" + book1.borrowNumber + "</td>\n" +
+                    "\n" +
+                    "    </tr>";
+            }
+            // 设置表格数据
+            document.getElementById("books").innerHTML = bookData;
+
+        })
+    }
+</script>
+</html>
